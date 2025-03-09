@@ -248,21 +248,21 @@ func (w *WebsocketClient) resubscribeAll() error {
 }
 
 func (w *WebsocketClient) sendSubscribe(sub Subscription) error {
-	return w.writeJSON(wsCommand{
+	return w.writeJSON(WsCommand{
 		Method:       "subscribe",
 		Subscription: &sub,
 	})
 }
 
 func (w *WebsocketClient) sendUnsubscribe(sub Subscription) error {
-	return w.writeJSON(wsCommand{
+	return w.writeJSON(WsCommand{
 		Method:       "unsubscribe",
 		Subscription: &sub,
 	})
 }
 
 func (w *WebsocketClient) sendPing() error {
-	return w.writeJSON(wsCommand{Method: "ping"})
+	return w.writeJSON(WsCommand{Method: "ping"})
 }
 
 func (w *WebsocketClient) writeJSON(v any) error {

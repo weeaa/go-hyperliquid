@@ -32,7 +32,7 @@ func (s Subscription) key() subKey {
 	}
 }
 
-type wsCommand struct {
+type WsCommand struct {
 	Method       string        `json:"method"`
 	Subscription *Subscription `json:"subscription,omitempty"`
 }
