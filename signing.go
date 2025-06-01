@@ -21,13 +21,8 @@ func SignL1Action(
 		chainID = "0x66eee"
 	}
 
-	actionJSON, err := json.Marshal(action)
-	if err != nil {
-		return "", fmt.Errorf("failed to marshal action: %w", err)
-	}
-
 	msg := map[string]any{
-		"action":       actionJSON,
+		"action":       action,
 		"chainId":      chainID,
 		"nonce":        timestamp,
 		"vaultAddress": vaultAddress,
