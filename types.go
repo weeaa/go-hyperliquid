@@ -95,8 +95,8 @@ type OrderWire struct {
 	Asset      int     `json:"a"`
 	IsBuy      bool    `json:"b"`
 	OrderType  string  `json:"t,omitempty"`
-	LimitPx    float64 `json:"p"`
-	Size       float64 `json:"s"`
+	LimitPx    string  `json:"p"`
+	Size       string  `json:"s"`
 	ReduceOnly bool    `json:"r"`
 	TriggerPx  float64 `json:"tp,omitempty"`
 	IsMarket   bool    `json:"im,omitempty"`

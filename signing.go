@@ -54,9 +54,9 @@ func OrderRequestToWire(req OrderRequest, asset int) OrderWire {
 	wire := OrderWire{
 		Asset:      asset,
 		IsBuy:      req.IsBuy,
-		LimitPx:    req.LimitPx,
+		LimitPx:    fmt.Sprint(req.LimitPx),
 		ReduceOnly: req.ReduceOnly,
-		Size:       req.Size,
+		Size:       fmt.Sprint(req.Size),
 	}
 
 	if req.OrderType.Limit != nil {
