@@ -11,7 +11,10 @@ const (
 )
 
 type Info struct {
-	client         *Client
+	client      *Client
+	spotToAsset map[string]int
+	perpToAsset map[string]int
+
 	coinToAsset    map[string]int
 	nameToCoin     map[string]string
 	assetToDecimal map[int]int
@@ -48,6 +51,8 @@ func (i *Info) postTimeRangeRequest(
 func NewInfo(baseURL string, skipWS bool, meta *Meta, spotMeta *SpotMeta) *Info {
 	info := &Info{
 		client:         NewClient(baseURL),
+		spotToAsset:    make(map[string]int),
+		perpToAsset:    make(map[string]int),
 		coinToAsset:    make(map[string]int),
 		nameToCoin:     make(map[string]string),
 		assetToDecimal: make(map[int]int),
@@ -69,22 +74,34 @@ func NewInfo(baseURL string, skipWS bool, meta *Meta, spotMeta *SpotMeta) *Info 
 		}
 	}
 
-	// Map perp assets
-	for asset, assetInfo := range meta.Universe {
-		info.coinToAsset[assetInfo.Name] = asset
-		info.nameToCoin[assetInfo.Name] = assetInfo.Name
-		info.assetToDecimal[asset] = assetInfo.SzDecimals
-	}
-
-	// Map spot assets starting at 10000
 	for _, spotInfo := range spotMeta.Universe {
 		asset := spotInfo.Index + spotAssetIndexOffset
+		info.spotToAsset[spotInfo.Name] = asset
 		info.coinToAsset[spotInfo.Name] = asset
 		info.nameToCoin[spotInfo.Name] = spotInfo.Name
 		info.assetToDecimal[asset] = spotMeta.Tokens[spotInfo.Tokens[0]].SzDecimals
 	}
 
+	for asset, assetInfo := range meta.Universe {
+		info.perpToAsset[assetInfo.Name] = asset
+		if _, exists := info.coinToAsset[assetInfo.Name]; !exists {
+			info.coinToAsset[assetInfo.Name] = asset
+		}
+		info.nameToCoin[assetInfo.Name] = assetInfo.Name
+		info.assetToDecimal[asset] = assetInfo.SzDecimals
+	}
+
 	return info
+}
+
+func (i *Info) SpotAsset(name string) (int, bool) {
+	id, ok := i.spotToAsset[name]
+	return id, ok
+}
+
+func (i *Info) PerpAsset(name string) (int, bool) {
+	id, ok := i.perpToAsset[name]
+	return id, ok
 }
 
 func (i *Info) Meta() (*Meta, error) {

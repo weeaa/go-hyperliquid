@@ -58,8 +58,8 @@ func NewExchange(
 	}
 }
 
-func (e *Exchange) Order(req OrderRequest, builder *BuilderInfo) (*OpenOrder, error) {
-	orders, err := e.BulkOrders([]OrderRequest{req}, builder)
+func (e *Exchange) Order(req OrderRequest, builder *BuilderInfo, isSpot bool) (*OpenOrder, error) {
+	orders, err := e.BulkOrders([]OrderRequest{req}, builder, isSpot)
 	if err != nil {
 		return nil, err
 	}
@@ -69,13 +69,27 @@ func (e *Exchange) Order(req OrderRequest, builder *BuilderInfo) (*OpenOrder, er
 	return &orders[0], nil
 }
 
-func (e *Exchange) BulkOrders(orders []OrderRequest, builder *BuilderInfo) ([]OpenOrder, error) {
+func (e *Exchange) BulkOrders(orders []OrderRequest, builder *BuilderInfo, isSpot bool) ([]OpenOrder, error) {
 	timestamp := time.Now().UnixMilli()
 
 	orderWires := make([]OrderWire, len(orders))
 	for i, order := range orders {
-		asset := e.info.NameToAsset(order.Coin)
-		wire := OrderRequestToWire(order, asset)
+		var assetID int
+		var ok bool
+
+		if isSpot {
+			assetID, ok = e.info.SpotAsset(order.Coin)
+			if !ok {
+				return nil, fmt.Errorf("spot asset not found: %s", order.Coin)
+			}
+		} else {
+			assetID, ok = e.info.PerpAsset(order.Coin)
+			if !ok {
+				return nil, fmt.Errorf("perp asset not found: %s", order.Coin)
+			}
+		}
+
+		wire := OrderRequestToWire(order, assetID)
 		orderWires[i] = wire
 
 		fmt.Printf("orderWire[%d]: %+v\n", i, wire)
