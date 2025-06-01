@@ -27,7 +27,7 @@ func SignL1Action(
 	}
 
 	msg := map[string]any{
-		"action":       string(actionJSON),
+		"action":       actionJSON,
 		"chainId":      chainID,
 		"nonce":        timestamp,
 		"vaultAddress": vaultAddress,
