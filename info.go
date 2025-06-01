@@ -11,13 +11,12 @@ const (
 )
 
 type Info struct {
-	client      *Client
-	spotToAsset map[string]int
-	perpToAsset map[string]int
-
+	client         *Client
 	coinToAsset    map[string]int
 	nameToCoin     map[string]string
 	assetToDecimal map[int]int
+	spotToAsset    map[string]int
+	perpToAsset    map[string]int
 }
 
 // postTimeRangeRequest makes a POST request with time range parameters
@@ -51,11 +50,11 @@ func (i *Info) postTimeRangeRequest(
 func NewInfo(baseURL string, skipWS bool, meta *Meta, spotMeta *SpotMeta) *Info {
 	info := &Info{
 		client:         NewClient(baseURL),
-		spotToAsset:    make(map[string]int),
-		perpToAsset:    make(map[string]int),
 		coinToAsset:    make(map[string]int),
 		nameToCoin:     make(map[string]string),
 		assetToDecimal: make(map[int]int),
+		spotToAsset:    make(map[string]int),
+		perpToAsset:    make(map[string]int),
 	}
 
 	if meta == nil {
@@ -75,11 +74,14 @@ func NewInfo(baseURL string, skipWS bool, meta *Meta, spotMeta *SpotMeta) *Info 
 	}
 
 	for _, spotInfo := range spotMeta.Universe {
+		token := spotMeta.Tokens[spotInfo.Tokens[0]]
+		symbol := token.Name
+
 		asset := spotInfo.Index + spotAssetIndexOffset
-		info.spotToAsset[spotInfo.Name] = asset
-		info.coinToAsset[spotInfo.Name] = asset
-		info.nameToCoin[spotInfo.Name] = spotInfo.Name
-		info.assetToDecimal[asset] = spotMeta.Tokens[spotInfo.Tokens[0]].SzDecimals
+		info.spotToAsset[symbol] = asset
+		info.coinToAsset[symbol] = asset
+		info.nameToCoin[symbol] = symbol
+		info.assetToDecimal[asset] = token.SzDecimals
 	}
 
 	for asset, assetInfo := range meta.Universe {
