@@ -81,9 +81,9 @@ type LimitOrderType struct {
 }
 
 type TriggerOrderType struct {
-	TriggerPx float64 `json:"triggerPx"`
-	IsMarket  bool    `json:"isMarket"`
-	Tpsl      string  `json:"tpsl"` // "tp" or "sl"
+	TriggerPx string `json:"triggerPx"`
+	IsMarket  bool   `json:"isMarket"`
+	Tpsl      string `json:"tpsl"` // "tp" or "sl"
 }
 
 type BuilderInfo struct {
@@ -92,15 +92,16 @@ type BuilderInfo struct {
 }
 
 type OrderWire struct {
-	Asset      int     `json:"a"`
-	IsBuy      bool    `json:"b"`
-	OrderType  string  `json:"t,omitempty"`
-	LimitPx    string  `json:"p"`
-	Size       string  `json:"s"`
-	ReduceOnly bool    `json:"r"`
-	TriggerPx  float64 `json:"tp,omitempty"`
-	IsMarket   bool    `json:"im,omitempty"`
-	Tpsl       string  `json:"tpsl,omitempty"`
-	Tif        string  `json:"tif,omitempty"`
-	Cloid      string  `json:"c,omitempty"`
+	Asset      int         `json:"a"`
+	IsBuy      bool        `json:"b"`
+	Size       string      `json:"s"`
+	LimitPx    string      `json:"p"`
+	ReduceOnly bool        `json:"r"`
+	Type       OrderTypeV2 `json:"t"`
+	Cloid      string      `json:"c,omitempty"`
+}
+
+type OrderTypeV2 struct {
+	Limit   *LimitOrderType   `json:"limit,omitempty"`
+	Trigger *TriggerOrderType `json:"trigger,omitempty"`
 }

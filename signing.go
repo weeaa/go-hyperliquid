@@ -51,22 +51,24 @@ func OrderRequestToWire(req OrderRequest, asset int) OrderWire {
 	wire := OrderWire{
 		Asset:      asset,
 		IsBuy:      req.IsBuy,
-		LimitPx:    fmt.Sprintf("%.8f", req.LimitPx), // force float → string with precision
 		Size:       fmt.Sprintf("%.8f", req.Size),
+		LimitPx:    fmt.Sprintf("%.8f", req.LimitPx),
 		ReduceOnly: req.ReduceOnly,
 	}
 
 	if req.OrderType.Limit != nil {
-		wire.OrderType = "Limit"
-		wire.Tif = req.OrderType.Limit.Tif
+		wire.Type.Limit = &LimitOrderType{
+			Tif: req.OrderType.Limit.Tif,
+		}
 	} else if req.OrderType.Trigger != nil {
-		wire.OrderType = "Trigger"
-		wire.TriggerPx = req.OrderType.Trigger.TriggerPx
-		wire.IsMarket = req.OrderType.Trigger.IsMarket
-		wire.Tpsl = req.OrderType.Trigger.Tpsl
+		wire.Type.Trigger = &TriggerOrderType{
+			IsMarket:  req.OrderType.Trigger.IsMarket,
+			TriggerPx: req.OrderType.Trigger.TriggerPx,
+			Tpsl:      req.OrderType.Trigger.Tpsl,
+		}
 	}
 
-	if req.Cloid != nil {
+	if req.Cloid != nil && *req.Cloid != "" {
 		wire.Cloid = *req.Cloid
 	}
 
