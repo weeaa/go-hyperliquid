@@ -38,6 +38,8 @@ func SignL1Action(
 		return "", fmt.Errorf("failed to marshal message: %w", err)
 	}
 
+	fmt.Println("payload", string(msgJSON))
+
 	hash := crypto.Keccak256Hash(msgJSON)
 	signature, err := crypto.Sign(hash.Bytes(), privateKey)
 	if err != nil {
