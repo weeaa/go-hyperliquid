@@ -82,9 +82,9 @@ func (e *Exchange) BulkOrders(orders []OrderRequest, builder *BuilderInfo) ([]Op
 	}
 
 	action := map[string]any{
-		"type":     "order",
-		"orders":   orderWires,
-		"grouping": "na",
+		"type":   "order",
+		"orders": orderWires,
+		//"grouping": "na",
 	}
 	if builder != nil {
 		action["builder"] = builder
