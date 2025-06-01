@@ -3,6 +3,7 @@ package hyperliquid
 import (
 	"crypto/ecdsa"
 	"encoding/json"
+	"fmt"
 	"time"
 )
 
@@ -76,6 +77,8 @@ func (e *Exchange) BulkOrders(orders []OrderRequest, builder *BuilderInfo) ([]Op
 		asset := e.info.NameToAsset(order.Coin)
 		wire := OrderRequestToWire(order, asset)
 		orderWires[i] = wire
+
+		fmt.Printf("orderWire[%d]: %+v\n", i, wire)
 	}
 
 	action := map[string]any{
@@ -86,6 +89,9 @@ func (e *Exchange) BulkOrders(orders []OrderRequest, builder *BuilderInfo) ([]Op
 	if builder != nil {
 		action["builder"] = builder
 	}
+
+	fmt.Printf("action: %+v", action)
+	fmt.Println("isMainnet", e.client.baseURL == MainnetAPIURL)
 
 	sig, err := SignL1Action(
 		e.privateKey,
@@ -98,15 +104,21 @@ func (e *Exchange) BulkOrders(orders []OrderRequest, builder *BuilderInfo) ([]Op
 		return nil, err
 	}
 
+	fmt.Println("sig:", sig)
+
 	resp, err := e.postAction(action, sig, timestamp)
 	if err != nil {
 		return nil, err
 	}
 
+	fmt.Printf("resp: %s\n", string(resp))
+
 	var result []OpenOrder
 	if err := json.Unmarshal(resp, &result); err != nil {
 		return nil, err
 	}
+
+	fmt.Printf("result: %+v\n", result)
 
 	return result, nil
 }

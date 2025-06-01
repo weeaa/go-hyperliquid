@@ -3,11 +3,11 @@ package examples
 import (
 	"testing"
 
-	"github.com/sonirico/go-hyperliquid"
+	"github.com/weeaa/go-hyperliquid"
 )
 
 func TestOrder(t *testing.T) {
-	skipIfNoPrivateKey(t)
+	//skipIfNoPrivateKey(t)
 	exchange := getTestExchange(t)
 
 	tests := []struct {

@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/ethereum/go-ethereum/crypto"
-	"github.com/sonirico/go-hyperliquid"
+	"github.com/weeaa/go-hyperliquid"
 )
 
 var (
@@ -20,7 +20,7 @@ func TestMain(m *testing.M) {
 	privKeyHex := os.Getenv("HL_PRIVATE_KEY")
 	if privKeyHex == "" {
 		// Use a test private key if none provided
-		privKeyHex = "1111111111111111111111111111111111111111111111111111111111111111"
+		privKeyHex = "ff"
 	}
 
 	testPrivateKey, err = crypto.HexToECDSA(privKeyHex)
