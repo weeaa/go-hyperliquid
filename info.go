@@ -77,6 +77,10 @@ func NewInfo(baseURL string, skipWS bool, meta *Meta, spotMeta *SpotMeta) *Info 
 		token := spotMeta.Tokens[spotInfo.Tokens[0]]
 		symbol := token.Name
 
+		if _, ok := info.spotToAsset[symbol]; ok {
+			continue
+		}
+
 		asset := spotInfo.Index + spotAssetIndexOffset
 		info.spotToAsset[symbol] = asset
 		info.coinToAsset[symbol] = asset
