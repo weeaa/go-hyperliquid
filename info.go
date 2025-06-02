@@ -7,7 +7,7 @@ import (
 
 const (
 	// spotAssetIndexOffset is the offset added to spot asset indices
-	spotAssetIndexOffset = 1000
+	spotAssetIndexOffset = 10000
 )
 
 type Info struct {
